@@ -519,8 +519,11 @@ class SDistMetadataFetcher(object):
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         p.communicate()
         info_contents = self._osutils.get_directory_contents(egg_info_dir)
-        pkg_info_path = self._osutils.joinpath(
-            egg_info_dir, info_contents[0], 'PKG-INFO')
+        if len(info_contents) > 0:
+            pkg_info_path = self._osutils.joinpath(
+                egg_info_dir, info_contents[0], 'PKG-INFO')
+        else:
+            pkg_info_path = egg_info_dir.replace('egg-info', 'PKG-INFO')
         return pkg_info_path
 
     def _unpack_sdist_into_dir(self, sdist_path, unpack_dir):
